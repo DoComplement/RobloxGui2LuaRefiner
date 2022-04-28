@@ -1,4 +1,6 @@
 
+// Updated to ignore comments or blank spaces in any logical place
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -6,44 +8,53 @@
 
 using std::string;
 using std::vector;
-using std::cin;
 using std::cout;
+using std::cin;
 
 int find(vector<string> &, string);
+void r(string &);
 int LINE = 0;
 
 int main(){
 	
 	cout << "\nlocal function createInstance(class, props)\n"
-		 << "\tlocal inst = Instance.new(class)\n"
-		 << "\tfor i, v in pairs(props) do"
-		 << "\n\t\tinst[i] = v\n\tend\n\n\treturn inst\nend\n\n";
+		<< "\tlocal inst = Instance.new(class)\n"
+		<< "\tfor i, v in pairs(props) do"
+		<< "\n\t\tinst[i] = v\n\tend\n\n\treturn inst\nend\n\n";
 	
 	vector<string> Names, ClassNames;
 	vector<int> cCheck;
 	string str, pastName = "nil";
 	while(getline(cin, str)) { LINE++;
-		if (str.substr(0, 5) == "local"){
+		int x = 0;
+		for (int i = -1; i++ < static_cast<int>(str.length() - 1);) {
+			if (str[i] == ' ' || str[i] == '\t') {	x++;	}
+			else { break; }
+		}
+		if (str[x] == '-' && str[x + 1] == '-') {	continue;	}
+		else if (str.substr(x, x + 5).substr(0, 5) == "local"){
 			string tName, tClassName;
 			int c1 = 1, c2 = 0;
-			for (int i = -1; i++ < static_cast<int>(str.length() - 2);){
-				if (i > 5 && c1){
+			for (int i = (x - 1); i++ < static_cast<int>(str.length() - 2);){
+				if (i > (x + 5) && c1 && str[i] != ' '){ 
 					tName += str[i];	
-					if (static_cast<int>(str[i + 1]) == 32) {	c1 = 0;	}
+					if (str[i + 1] == ' ') {	c1 = 0;	}
 				}
-				else if (str[i] == '"' && !c2) {	c2 = 1;	}
-				if (c2) {	tClassName += str[i];	}
+				else if (str[i] == '"' || str[i] == ')') {	c2++;	}
+				if (c2 && c2 < 3) {	tClassName += str[i];	}
 			}
 			Names.push_back(tName); ClassNames.push_back(tClassName);
 			cCheck.push_back(1);
 		}
 		else if (str.length() > 0){
-			int check = 0; string tName;
-			for (int i = -1; i++ < static_cast<int>(str.length() - 1);){
-				if (check) {	cout << str[i];	}
-				
-				if (str[i] != '.' and !check) { tName += str[i];	}
-				else if (i == static_cast<int>(tName.length())) {
+			int check = 0; string tName, tPose;
+			for (int i = (x - 1); i++ < static_cast<int>(str.length() - 1);){
+				if (check) {	tPose += str[i];
+					if ((str[i + 1] == '-' && str[i + 2] == '-') || i == static_cast<int>(str.length() - 1))
+					{	r(tPose); break;	}
+				}
+				if (str[i] != '.' and !check) {	tName += str[i];	}
+				else if ((i - x) == static_cast<int>(tName.length())) {
 					if (pastName != "nil")
 					{	cout << ((pastName == tName) ? (", ") : ("})\n"));	}
 					check = 1;
@@ -68,9 +79,18 @@ int find(vector<string> &obj, string val){
 	for (int i = -1; i++ < static_cast<int>(obj.size() - 1);)
 	{	if (obj.at(i) == val) {	temp = i;	}}
 	if (temp == -1) {
-		std::cout << "Some sort of error has occurred..."
+		cout << "Some sort of error has occurred..."
 				  << "Current Line: " << LINE;
 		exit(EXIT_FAILURE);
 	}
 	return temp;
+}
+
+void r(string &obj){
+	int count = 0;
+	for (int i = static_cast<int>(obj.length()); i-- > 0;) {
+		if (obj[i] == ' ' || obj[i] == '\t') {	count++;	} 
+		else {	break;	}
+	}
+	cout <<  obj.substr(0, obj.length() - count);
 }
