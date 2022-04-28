@@ -39,7 +39,7 @@ int main(){
 			string tName, tClassName;
 			int c1 = 1, c2 = 0;
 			for (int i = (x - 1); i++ < static_cast<int>(str.length() - 2);){
-				if (i > (x + 5) && c1 && str[i] != ' '){ 
+				if (i > (x + 5) && c1){ 
 					tName += str[i];	
 					if (str[i + 1] == ' ') {	c1 = 0;	}
 				}
