@@ -69,7 +69,7 @@ int main(){
 					}
 				}
 			}
-			pastName = tName;	
+			if (tName.length() > 0) {pastName = tName;}		
 		}
 	}	
 	Out << "})";
