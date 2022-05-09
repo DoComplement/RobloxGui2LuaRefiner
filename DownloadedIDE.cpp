@@ -6,7 +6,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
-#include <windows.h>
+#include <windows.h>	// delete lines 9, 23, 24, 34, 92, and 93 if this interferes with compilation
 
 using std::string;
 using std::vector;
