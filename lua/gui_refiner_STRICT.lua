@@ -1,4 +1,4 @@
--- this format is somewhat strict because only a specific (not tampered) format is allowed
+-- this format is somewhat strict because only a specific, untampered format is allowed
 
 -- Input file must be in the same directory of this .lua file
 -- change input & output filename below
@@ -32,7 +32,7 @@ end;
 for line in io.lines(INPUT_FILENAME)do
 	if(#line==0 or"--"==line:sub(1,2))then goto NEXT end;	
 	if(line:sub(1,5)=="local"and"function"~=line:sub(7, 14))then
-		classes[#classes + 1] = {line:match("^local (.+) = Instance.new%((\".+\")%)")};		-- {name,class}
+		classes[#classes + 1] = {line:match("local (.+) = Instance.new%((\".+\")%)")};		-- {name,class}
 		goto NEXT;
 	end;
 	
@@ -47,12 +47,14 @@ for line in io.lines(INPUT_FILENAME)do
 end;
 
 local fmt = {
+	"\n-- executes new \"new_inst\" format";
 	"local function new_inst(class,parent,props)";
 	"\tlocal inst = Instance.new(class);";
 	"\tfor prop,val in next,props do";
 	"\t\tinst[prop] = val;\n\tend;";
-	"\tinst.Parent = parent;";
+	"\tinst.Parent = parent;\t-- appease Instance.new listeners";
 	"\treturn inst;\nend;\n";
+	"-- instances, edit toward further efficiency"
 }
 
 local tmp = {
@@ -64,7 +66,7 @@ local tmp = {
 	"TEMP_PARENT";			-- 6 -> parent
 	",{";
 	"TEMP_PROPERTIES";		-- 8 -> properties
-	"})";
+	"});";
 }
 
 for idx,tbl in next,classes do
@@ -73,5 +75,6 @@ for idx,tbl in next,classes do
 	fmt[#fmt + 1] = table.concat(tmp);
 end;
 
-fmt[#fmt + 1] = '\n'..table.concat(OTHER,'\n');
+fmt[#fmt + 1] = "\n-- everything else\n"..table.concat(OTHER,'\n');
 io.open(OUTPUT_FILENAME,'w'):write(table.concat(fmt,'\n')):close();
+
