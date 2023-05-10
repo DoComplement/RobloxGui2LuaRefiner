@@ -32,7 +32,7 @@ end;
 for line in io.lines(INPUT_FILENAME)do
 	if(#line==0 or"--"==line:sub(1,2))then goto NEXT end;	
 	if(line:sub(1,5)=="local"and"function"~=line:sub(7, 14))then
-		classes[#classes + 1] = {line:match("local (.+) = Instance.new%((\".+\")%)")};		-- {name,class}
+		classes[#classes + 1] = {line:match("^local (.+) = Instance.new%((\".+\")%)")};		-- {name,class}
 		goto NEXT;
 	end;
 	
