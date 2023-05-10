@@ -1,6 +1,6 @@
 -- this format is somewhat strict because only a specific, untampered format is allowed
 
--- Input file must be in the same directory of this .lua file
+-- consider keeping the input file in the same directory of this file
 -- change input & output filename below
 
 local INPUT_FILENAME = "input.lua";
@@ -20,7 +20,7 @@ local function find_idx(name,assignment)
 end;
 
 local function add_main(idx,name,assignment)
-	if(assignment:sub(1, 6)=="Parent")then
+	if(assignment:sub(1,6)=="Parent")then
 		parents[idx] = assignment:match("= (.+)");	-- parent
 	elseif(not properties[idx])then 
 		properties[idx] = {assignment};
@@ -47,14 +47,14 @@ for line in io.lines(INPUT_FILENAME)do
 end;
 
 local fmt = {
-	"\n-- executes new \"new_inst\" format";
+	"\n-- executes \"new_inst\" format";
 	"local function new_inst(class,parent,props)";
 	"\tlocal inst = Instance.new(class);";
 	"\tfor prop,val in next,props do";
 	"\t\tinst[prop] = val;\n\tend;";
 	"\tinst.Parent = parent;\t-- appease Instance.new listeners";
 	"\treturn inst;\nend;\n";
-	"-- instances, edit toward further efficiency"
+	"-- instances, edit toward further efficiency";
 }
 
 local tmp = {
@@ -77,4 +77,3 @@ end;
 
 fmt[#fmt + 1] = "\n-- everything else\n"..table.concat(OTHER,'\n');
 io.open(OUTPUT_FILENAME,'w'):write(table.concat(fmt,'\n')):close();
-
