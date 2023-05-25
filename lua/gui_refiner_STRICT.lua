@@ -31,13 +31,13 @@ end;
 
 for line in io.lines(INPUT_FILENAME)do
 	if(#line==0 or"--"==line:sub(1,2))then goto NEXT end;	
-	if(line:sub(1,5)=="local"and"function"~=line:sub(7, 14))then
+	if(line:sub(1,5)=="local"and nil~=line:match("Instance%.new"))then
 		classes[#classes + 1] = {line:match("^local (.+) = Instance.new%((\".+\")%)")};		-- {name,class}
 		goto NEXT;
 	end;
 	
 	local idx,name,assignment = find_idx(line:match("^(%g+)%.(.+)"));
-	if(idx~=nil)then
+	if(assignment~=nil and not line:match("function"))then
 		add_main(idx,name,assignment);
 	else
 		OTHER[#OTHER + 1] = line;
