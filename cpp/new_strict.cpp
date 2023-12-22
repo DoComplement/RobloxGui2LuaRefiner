@@ -4,7 +4,6 @@
 #include <fstream>
 #include <vector>
 
-using std::ifstream;
 using std::vector;
 using std::string;
 
@@ -36,7 +35,7 @@ const char *OUTPUT_FILENAME{"output.lua"};
 
 int main(){
 	
-	ifstream IN(INPUT_FILENAME);
+	std::ifstream IN(INPUT_FILENAME);
 	
 	vector<vector<string>> classes{},		// name,class
 						   properties{};	// assignments
